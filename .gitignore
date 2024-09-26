@@ -36,3 +36,6 @@ lerna-debug.log*
 
 # dotEnv File
 .env
+
+#마이그레이션 정보
+migrations
