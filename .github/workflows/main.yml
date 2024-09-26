@@ -1,0 +1,52 @@
+name : CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-lastest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Database migration
+        run: npm run db:generate
+        
+      - name: Database run
+        run: npm run db:run
+        
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to EC2
+        env:
+          HOST: ${{ secrets.SERVER_HOST }}
+          USERNAME: ${{ secrets.SERVER_USERNAME }}
+          SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        run:
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          rsync -avz --delete --exclude=node_modules --exclude=.git ./ ${{ env.USERNAME }}@${{ env.HOST }}:/home/${{ env.USERNAME }}/app
+
+          ssh -i ~/.ssh/id_rsa ${{ env.USERNAME }}@${{ env.HOST }} << 'EOF'
+            cd /home/${{ env.USERNAME }}/app
+            npm ci --only=production
+            npm run db:generate
+            npm run db:run
+            npm run build
+            pm2 reload ecosystem.config.js --update-env
+          EOF
