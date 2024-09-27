@@ -34,13 +34,8 @@ jobs:
           echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa.pem
           chmod 600 ~/.ssh/id_rsa.pem
 
-          rsync -avz --delete --exclude=node_modules --exclude=.git ./ ${{ env.USERNAME }}@${{ env.HOST }}:/home/${{ env.USERNAME }}/app
 
           ssh -i "~/.ssh/id_rsa.pem" ${{ env.USERNAME }}@${{ env.HOST }} << 'EOF'
-          cd /home/${{ env.USERNAME }}/app
-          yarn --only=production
-          yarn build
-          EOF
-
           pwd
-          ls -al
+          ls
+          EOF
