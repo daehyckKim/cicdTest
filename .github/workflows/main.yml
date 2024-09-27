@@ -52,6 +52,7 @@ jobs:
           #생성된 디렉토리 이동
           cd /home/${{env.USERNAME}}/app
 
+          pwd
           # .env 파일 생성
           echo "dbHost=${env.DB_HOST}" > .env
           echo "dbUser=${env.DB_USER}" >> .env
