@@ -29,6 +29,7 @@ jobs:
           mkdir -p $HOME/.ssh
           echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa.pem
           chmod 600 ~/.ssh/id_rsa.pem
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> $HOME/.ssh/known_hosts
 
       - name: Deploy to EC2
         env:
