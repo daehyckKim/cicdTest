@@ -40,5 +40,6 @@ jobs:
 
           ssh -i "~/.ssh/id_rsa.pem" ${{ env.USERNAME }}@${{ env.HOST }} << 'EOF'
           pwd
+          mkdir hello_aws
           ls
           EOF
