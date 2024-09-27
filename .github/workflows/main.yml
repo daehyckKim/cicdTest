@@ -52,12 +52,12 @@ jobs:
           #생성된 디렉토리 이동
           cd /home/${{env.USERNAME}}/app
 
-          pwd
-          # .env 파일 생성
-          echo "dbHost=${env.DB_HOST}" > .env
-          echo "dbUser=${env.DB_USER}" >> .env
-          echo "dbPassword=${env.DB_PASSWORD}" >> .env
-          echo "database=${env.DB_DATABASE}" >> .env
+          # pwd
+          # # .env 파일 생성
+          # echo "dbHost=${env.DB_HOST}" > .env
+          # echo "dbUser=${env.DB_USER}" >> .env
+          # echo "dbPassword=${env.DB_PASSWORD}" >> .env
+          # echo "database=${env.DB_DATABASE}" >> .env
 
           #설치된 디렉토리로 이동
           cd /home/${{ env.USERNAME }}/app
