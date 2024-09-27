@@ -46,7 +46,6 @@ jobs:
 
           ls -al
 
-
           #파일 업로드
           rsync -avz --delete --exclude=node_modules --exclude=.git -e "ssh -i ~/.ssh/id_rsa.pem" ./ ${{ env.USERNAME }}@${{ env.HOST }}:/home/${{ env.USERNAME }}/app
 
@@ -59,16 +58,17 @@ jobs:
 
           # pwd
           # .env 파일 생성
-          echo "dbHost=${DB_HOST}" > .env
+          echo "dbHost=localhost > .env
           echo "dbUser=${DB_USER}" >> .env
           echo "dbPassword=${DB_PASSWORD}" >> .env
           echo "database=${DB_DATABASE}" >> .env
 
-          #설치된 디렉토리로 이동
-          cd /home/${{ env.USERNAME }}/app
+          echo "${USERNAME}"
+          echo "/home/${{ env.USERNAME }}/app"
 
+          pwd
           #파일 업로드
-          npm ci
+          npm i
 
           #데이터 베이스 마이그레이션
           # yarn db:generate
