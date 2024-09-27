@@ -29,9 +29,4 @@ jobs:
           HOST: ${{ secrets.SERVER_HOST }}
           USERNAME: ${{ secrets.SERVER_USERNAME }}
           SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
-        run: |
-          cd ~
-          ls -al
-          echo env.USERNAME
-          echo env.HOST
-          echo env.SERVER_SSH_KEY
+        run: echo env.HOST
