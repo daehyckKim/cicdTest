@@ -19,10 +19,10 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: yarn
+        run: npm i
 
       - name: Build project
-        run: yarn build
+        run: npm run build
 
       - name: Set up SSH
         run: |
@@ -65,8 +65,8 @@ jobs:
           npm install
 
           # 데이터베이스 마이그레이션 (필요에 따라 주석 해제)
-          yarn db:generate
-          yarn db:run
+          npm run db:generate
+          npm run db:run
 
           # 빌드 파일 배포
           npm run build
