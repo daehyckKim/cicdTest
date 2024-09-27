@@ -21,12 +21,6 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Database migration
-        run: yarn db:generate
-
-      - name: Database run
-        run: yarn db:run
-
       - name: Build project
         run: yarn build
 
