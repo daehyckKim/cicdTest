@@ -26,7 +26,10 @@ jobs:
 
       - name: Set up SSH
         run: |
+          mkdir test
+          pwd
           mkdir -p ~/.ssh
+          ls -al
           echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa.pem
           chmod 600 ~/.ssh/id_rsa.pem
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
