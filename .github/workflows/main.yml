@@ -43,7 +43,7 @@ jobs:
         run: |
 
           #파일 업로드
-          rsync -avz --delete --exclude=node_modules --exclude=.git ./ ${{ env.USERNAME }}@${{ env.HOST }}:/home/${{ env.USERNAME }}/app
+          rsync -avz --delete --exclude=node_modules --exclude=.git -e "ssh -i ~/.ssh/id_rsa.pem" ./ ${{ env.USERNAME }}@${{ env.HOST }}:/home/${{ env.USERNAME }}/app
 
           #cloud서버 접근후 명령어 실행
           ssh -i "~/.ssh/id_rsa.pem" ${{ env.USERNAME }}@${{ env.HOST }} << 'EOF'
