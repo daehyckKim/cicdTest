@@ -58,6 +58,20 @@ jobs:
           echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
           echo "DB_DATABASE=${DB_DATABASE}" >> .env
 
+          #설치된 디렉토리로 이동
+          cd /home/${{ env.USERNAME }}/app
 
-          ls
+          #파일 업로드
+          yarn --only=production
+
+          #데이터 베이스 마이그레이션
+          yarn db:generate
+          yarn db:run
+
+          #빌드 파일배포
+          yarn build
+
+          #PM2 무중단 배포
+          pm2 reload ecosystem.config.js --update-env
+
           EOF
