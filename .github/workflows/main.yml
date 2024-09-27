@@ -63,7 +63,7 @@ jobs:
           echo "database=${DB_DATABASE}" >> .env
 
           echo "a=${{ env.USERNAME }}" > a 
-          echo "b=${USERNAME}" > a 
+          echo "b=${USERNAME}" >> a 
 
           #파일 업로드
           npm i
