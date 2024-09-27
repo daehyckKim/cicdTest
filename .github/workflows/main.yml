@@ -52,7 +52,6 @@ jobs:
           #cloud서버 접근후 명령어 실행
           ssh -t -i "~/.ssh/id_rsa.pem" ${{ env.USERNAME }}@${{ env.HOST }} << 'EOF'
 
-
           #생성된 디렉토리 이동
           cd /home/${{env.USERNAME}}/app
 
@@ -63,10 +62,9 @@ jobs:
           echo "dbPassword=${DB_PASSWORD}" >> .env
           echo "database=${DB_DATABASE}" >> .env
 
-          echo "${USERNAME}"
-          echo "/home/${{ env.USERNAME }}/app"
+          echo "a=${{ env.USERNAME }}" > a 
+          echo "b=${USERNAME}" > a 
 
-          pwd
           #파일 업로드
           npm i
 
