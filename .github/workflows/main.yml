@@ -51,7 +51,7 @@ jobs:
           #rsync -avz --delete --exclude=node_modules --exclude=.git -e "ssh -i ~/.ssh/id_rsa.pem" ./ ${{ env.USERNAME }}@${{ env.HOST }}:/home/${{ env.USERNAME }}/app
 
           #cloud서버 접근후 명령어 실행
-          # ssh -i "~/.ssh/id_rsa.pem" ${{ env.USERNAME }}@${{ env.HOST }} << 'EOF'
+          ssh -i "~/.ssh/id_rsa.pem" ${{ env.USERNAME }}@${{ env.HOST }} << 'EOF'
 
 
           #생성된 디렉토리 이동
@@ -80,4 +80,4 @@ jobs:
           # #PM2 무중단 배포
           # pm2 reload ecosystem.config.js --update-env
 
-          # EOF
+          EOF
