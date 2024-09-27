@@ -27,52 +27,51 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p $HOME/.ssh
-          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa.pem
-          chmod 600 ~/.ssh/id_rsa.pem
-          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+          echo "${{ secrets.SERVER_SSH_KEY }}" > $HOME/.ssh/id_rsa.pem
+          chmod 600 $HOME/.ssh/id_rsa.pem
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> $HOME/.ssh/known_hosts
 
       - name: Deploy to EC2
         env:
           HOST: ${{ secrets.SERVER_HOST }}
           USERNAME: ${{ secrets.SERVER_USERNAME }}
-          SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
           DB_HOST: ${{secrets.DB_HOST}}
           DB_USER: ${{secrets.DB_USER}}
           DB_PASSWORD: ${{secrets.DB_PASSWORD}}
           DB_DATABASE: ${{secrets.DB_DATABASE}}
         run: |
 
-          pwd
+          # 파일 업로드
+          rsync -avz --delete --exclude=node_modules --exclude=.git -e "ssh -i $HOME/.ssh/id_rsa.pem" ./ ${{ env.USERNAME }}@${{ env.HOST }}:/home/${{ env.USERNAME }}/app
 
-          ls -al
+          # cloud 서버 접근 후 명령어 실행
+          ssh -t -i "$HOME/.ssh/id_rsa.pem" ${{ env.USERNAME }}@${{ env.HOST }} << 'EOF'
 
-          #파일 업로드
-          rsync -avz --delete --exclude=node_modules --exclude=.git -e "ssh -i ~/.ssh/id_rsa.pem" ./ ${{ env.USERNAME }}@${{ env.HOST }}:/home/${{ env.USERNAME }}/app
+          # nvm 초기화
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use 18  # Node.js 버전 설정 (18으로 수정 가능)
 
-          #cloud서버 접근후 명령어 실행
-          ssh -t -i "~/.ssh/id_rsa.pem" ${{ env.USERNAME }}@${{ env.HOST }} << 'EOF'
+          # 생성된 디렉토리 이동
+          cd /home/${{ env.USERNAME }}/app
 
-          #생성된 디렉토리 이동
-          cd /home/${{env.USERNAME}}/app
-
-          # pwd
           # .env 파일 생성
-          echo "dbHost=${{env.DB_HOST}}" > .env
-          echo "dbUser=${{env.DB_USER}}" >> .env
-          echo "dbPassword=${{env.DB_PASSWORD}}" >> .env
-          echo "database=${{env.DB_DATABASE}}" >> .env
+          echo "dbHost=${{ env.DB_HOST }}" > .env
+          echo "dbUser=${{ env.DB_USER }}" >> .env
+          echo "dbPassword=${{ env.DB_PASSWORD }}" >> .env
+          echo "database=${{ env.DB_DATABASE }}" >> .env
 
-          #파일 업로드
-          npm i
+          # npm dependencies 설치
+          npm install
 
-          #데이터 베이스 마이그레이션
+          # 데이터베이스 마이그레이션 (필요에 따라 주석 해제)
           # yarn db:generate
           # yarn db:run
 
-          #빌드 파일배포
+          # 빌드 파일 배포
           npm run build
 
-          # #PM2 무중단 배포
+          # PM2 무중단 배포 (필요에 따라 주석 해제)
           # pm2 reload ecosystem.config.js --update-env
 
           EOF
