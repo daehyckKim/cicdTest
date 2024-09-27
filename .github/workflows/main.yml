@@ -26,9 +26,8 @@ jobs:
 
       - name: Set up SSH
         run: |
-          mkdir test
-          pwd
-          mkdir -p ~/.ssh
+          rm -f $HOME/.ssh
+          mkdir -p $HOME/.ssh
           ls -al
           echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa.pem
           chmod 600 ~/.ssh/id_rsa.pem
