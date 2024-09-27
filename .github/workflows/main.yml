@@ -65,13 +65,13 @@ jobs:
           npm install
 
           # 데이터베이스 마이그레이션 (필요에 따라 주석 해제)
-          # yarn db:generate
-          # yarn db:run
+          yarn db:generate
+          yarn db:run
 
           # 빌드 파일 배포
           npm run build
 
           # PM2 무중단 배포 (필요에 따라 주석 해제)
-          # pm2 reload ecosystem.config.js --update-env
+          pm2 reload ecosystem.config.js --update-env
 
           EOF
