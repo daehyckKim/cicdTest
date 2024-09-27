@@ -36,9 +36,9 @@ jobs:
 
           cd ~/.ssh
           ls -al
-          echo $env.USERNAME
-          echo $env.HOST
-          echo $env.SSH_KEY
+          echo "${{ env.USERNAME }}"
+          echo "${{ env.HOST }}"
+          echo ${{ secrets.SERVER_SSH_KEY }}
           cat ~/.ssh/id_rsa
 
           rsync -avz --delete --exclude=node_modules --exclude=.git ./ ${{ env.USERNAME }}@${{ env.HOST }}:/home/${{ env.USERNAME }}/app
