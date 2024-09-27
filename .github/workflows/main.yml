@@ -42,7 +42,7 @@ jobs:
           cat ~/.ssh/id_rsa
 
           rsync -avz --delete --exclude=node_modules --exclude=.git ./ ${{ env.USERNAME }}@${{ env.HOST }}:/home/${{ env.USERNAME }}/app
-s
+
           ssh -i ~/.ssh/id_rsa ${{ env.USERNAME }}@${{ env.HOST }} << 'EOF'
           cd /home/${{ env.USERNAME }}/app
           yarn --only=production
