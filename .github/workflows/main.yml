@@ -57,7 +57,7 @@ jobs:
 
           # pwd
           # .env 파일 생성
-          echo "dbHost=localhost > .env
+          echo "dbHost=localhost" > .env
           echo "dbUser=${DB_USER}" >> .env
           echo "dbPassword=${DB_PASSWORD}" >> .env
           echo "database=${DB_DATABASE}" >> .env
