@@ -53,10 +53,10 @@ jobs:
           cd /home/${{env.USERNAME}}/app
 
           # .env 파일 생성
-          echo "DB_HOST=${DB_HOST}" > .env
-          echo "DB_USER=${DB_USER}" >> .env
-          echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
-          echo "DB_DATABASE=${DB_DATABASE}" >> .env
+          echo "dbHost=${env.DB_HOST}" > .env
+          echo "dbUser=${env.DB_USER}" >> .env
+          echo "dbPassword=${env.DB_PASSWORD}" >> .env
+          echo "database=${env.DB_DATABASE}" >> .env
 
           #설치된 디렉토리로 이동
           cd /home/${{ env.USERNAME }}/app
