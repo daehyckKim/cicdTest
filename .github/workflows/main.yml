@@ -9,6 +9,8 @@ jobs:
   push_to_registry:
     name: Push to ncp container registry
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./backend
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -26,10 +28,11 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./backend/Dockerfile
+          file: ./Dockerfile
           push: true
           tags: ${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name:latest
           cache-from: type=registry,ref=${{ secrets.NCP_CONTAINER_REGISTRY }}/prv-frontend:latest
           cache-to: type=inline
+          working-directory: ${{ env.working-directory }}
         # secrets: |
         #   GIT_AUTH_TOKEN=${{ secrets.GIT_TOKEN }}
