@@ -25,7 +25,7 @@ jobs:
       - name: build and push
         uses: docker/build-push-action@v6
         with:
-          context: ./backend
+          context: .
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name:latest
