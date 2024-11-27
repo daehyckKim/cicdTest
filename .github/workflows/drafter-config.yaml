@@ -1,6 +1,6 @@
 # .github/workflows/drafter.yaml
 
-name: Draft new release
+name: Draft new release test
 on:
   push:
     branches:
