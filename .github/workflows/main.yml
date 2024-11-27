@@ -1,38 +1,26 @@
-name: auto deploy
-
+name: Tag Release
 on:
-  push:
+  pull_request:
     branches:
-      - test
-
+      - "main"
+    types:
+      - closed
 jobs:
-  push_to_registry:
-    name: Push to ncp container registry
+  generate_release:
+    name: Release
+    if: contains(github.event.pull_request.head.ref, 'release/v') && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./backend
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Login to NCP Container Registry
-        uses: docker/login-action@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Fetch version
+        run: |
+          VERSION=$(echo "${GITHUB_HEAD_REF}" | sed "s/release\\\\/v//")
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        id: fetch-version
+      - name: Generate release notes
+        uses: softprops/action-gh-release@v1
         with:
-          registry: ${{ secrets.NCP_CONTAINER_REGISTRY }}
-          username: ${{ secrets.NCP_ACCESS_KEY }}
-          password: ${{ secrets.NCP_SECRET_KEY }}
-      - name: build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: ${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name:latest
-          cache-from: type=registry,ref=${{ secrets.NCP_CONTAINER_REGISTRY }}/prv-frontend:latest
-          cache-to: type=inline
-          working-directory: ${{ env.working-directory }}
-        # secrets: |
-        #   GIT_AUTH_TOKEN=${{ secrets.GIT_TOKEN }}
+          token: ${{ secrets.CICD_TEST_TOKEN }}
+          tag_name: v${{ steps.fetch-version.outputs.version }}
+          generate_release_notes: true
