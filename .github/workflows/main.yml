@@ -1,39 +1,26 @@
-name: CI/CD Pipeline for Nest.js and MySQL
-
+name: Tag Release
 on:
-  push:
+  pull_request:
     branches:
-      - main
-
+      - "main"
+    types:
+      - closed
 jobs:
-  build:
+  generate_release:
+    name: Release
+    if: contains(github.event.pull_request.head.ref, 'release/v') && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Install Docker Compose
+      - name: Fetch version
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-
-      - name: Build and Run Docker Compose
-        run: |
-          docker-compose up -d --build
-
-      - name: Wait for the app to be ready
-        run: |
-          for i in {1..30}; do curl -f http://localhost:3000/ && break || sleep 5; done
-
-      - name: Test Application
-        run: |
-          curl http://localhost:3000/  # 원하는 엔드포인트로 확인
-
-      - name: Stop and Remove Containers
-        if: always() # 항상 실행
-        run: |
-          docker-compose down
+          VERSION=$(echo "${GITHUB_HEAD_REF}" | sed "s/release\\\\/v//")
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        id: fetch-version
+      - name: Generate release notes
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.CICD_TEST_TOKEN }}
+          tag_name: v${{ steps.fetch-version.outputs.version }}
+          generate_release_notes: true
