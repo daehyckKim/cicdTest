@@ -7,7 +7,7 @@ on:
       - closed
 jobs:
   generate_release:
-    name: Release
+    name: Release-test
     if: contains(github.event.pull_request.head.ref, 'release/v') && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
