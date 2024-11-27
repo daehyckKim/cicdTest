@@ -1,20 +1,21 @@
-name: Release Tag
+# .github/workflows/drafter.yaml
+
+name: Draft new release
 on:
   push:
     branches:
       - main
 jobs:
   build:
+    permissions:
+      contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: 버전 정보 추출
-        run: echo "##[set-output name=version;]$(echo '${{ github.event.head_commit.message }}' | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')"
-        id: extract_version_name
-      - name: Release 생성
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        # reference : https://github.com/release-drafter/release-drafter
+        uses: release-drafter/release-drafter@v6
         with:
-          tag_name: ${{ steps.extract_version_name.outputs.version }}
-          release_name: ${{ steps.extract_version_name.outputs.version }}
+          config-name: drafter-config.yaml
+        env:
+          GITHUB_TOKEN: ${{ secrets.CICD_TEST_TOKEN }}
