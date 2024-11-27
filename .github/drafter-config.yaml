@@ -1,4 +1,4 @@
-name-template: "v$RESOLVED_VERSION 이게어떤 소용이 있는지"
+name-template: "v$RESOLVED_VERSION 이게어떤 소용이 있는지2"
 tag-template: "v$RESOLVED_VERSION"
 commitish: main
 categories:
