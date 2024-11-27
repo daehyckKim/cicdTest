@@ -1,26 +1,28 @@
-name: Tag Release
+name: Release on Push
+
 on:
-  pull_request:
-    branches:
-      - "main"
-    types:
-      - closed
+  push:
+    branches: [main]
+
 jobs:
-  generate_release:
-    name: Release-test
-    if: contains(github.event.pull_request.head.ref, 'release/v') && github.event.pull_request.merged == true
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-      - name: Fetch version
-        run: |
-          VERSION=$(echo "${GITHUB_HEAD_REF}" | sed "s/release\\\\/v//")
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
-        id: fetch-version
-      - name: Generate release notes
-        uses: softprops/action-gh-release@v1
+      - uses: actions/checkout@v3
+      - name: Determine next version
+        id: determine_next_version
+        uses: actions/github-script@v6
         with:
-          token: ${{ secrets.CICD_TEST_TOKEN }}
-          tag_name: v${{ steps.fetch-version.outputs.version }}
-          generate_release_notes: true
+          github-token: ${{ secrets.CICD_TEST_TOKEN }}
+          script: |
+            const previousTags = context.repo.tags.map(tag => tag.name);
+            const latestTag = previousTags.sort((a, b) => b.localeCompare(a))[0];
+            const versionParts = latestTag ? latestTag.match(/^v(\d+)\.(\d+)\.(\d+)$/) : [0, 0, 0];
+            const [major, minor, patch] = versionParts.slice(1).map(Number);
+            const nextVersion = `v${major}.${minor}.${patch + 1}`;
+            console.log(nextVersion);
+            core.setOutput('nextVersion', nextVersion);
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.CICD_TEST_TOKEN }}
