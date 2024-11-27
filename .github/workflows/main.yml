@@ -20,7 +20,7 @@ jobs:
             const versionParts = latestTag ? latestTag.match(/^v(\d+)\.(\d+)\.(\d+)$/) : [0, 0, 0];
             const [major, minor, patch] = versionParts.slice(1).map(Number);
             const nextVersion = `v${major}.${minor}.${patch + 1}`;
-            console.log(nextVersion, "test");
+            console.log(nextVersion);
             core.setOutput('nextVersion', nextVersion);
       - name: Create Release
         uses: actions/create-release@v1
